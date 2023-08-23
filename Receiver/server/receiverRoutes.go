@@ -2,6 +2,7 @@ package server
 
 import (
 	"Receiver/models"
+	"Receiver/socket"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io"
@@ -17,11 +18,12 @@ func receiverRoutes(e *echo.Echo) {
 }
 
 func postHandler(c echo.Context) error {
-	send := &models.SendRequest{}
-	if err := c.Bind(send); err != nil {
+	message := &models.SendRequest{}
+	if err := c.Bind(message); err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, send)
+	socket.Client([]byte(message.Message))
+	return c.JSON(http.StatusOK, message)
 }
 
 type limitedReaderCloser struct {
@@ -38,7 +40,6 @@ func (l *limitedReaderCloser) Close() error {
 func minBodySizeMiddleware(minSize int64) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			// Read the first `minSize` bytes from the request body
 			body := c.Request().Body
 			buf := make([]byte, minSize)
 			n, err := io.ReadFull(body, buf)
