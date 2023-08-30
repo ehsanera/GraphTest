@@ -20,21 +20,21 @@ func generateRandomByteInRange(minByte, maxByte byte) (byte, error) {
 	return minByte + byte(randomIndex.Int64()), nil
 }
 
-func generateRandomByteSlice() []byte {
+func generateRandomString() string {
 	sizeRange := new(big.Int).Sub(big.NewInt(maxSizeBytes), big.NewInt(minSizeBytes))
 	size, err := rand.Int(rand.Reader, sizeRange)
 	if err != nil {
-		panic(err)
+		return ""
 	}
 
 	randomByteSlice := make([]byte, size.Int64())
 	for i := range randomByteSlice {
 		randomByte, err := generateRandomByteInRange('a', 'z')
 		if err != nil {
-			panic(err)
+			return ""
 		}
 		randomByteSlice[i] = randomByte
 	}
 
-	return randomByteSlice
+	return string(randomByteSlice)
 }

@@ -1,58 +1,50 @@
 package server
 
 import (
+	"Receiver/customCache"
+	"Receiver/customMiddleware"
 	"Receiver/models"
 	"Receiver/socket"
+	"context"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"io"
+	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 func receiverRoutes(e *echo.Echo) {
 	e.Use(middleware.BodyLimit("8K"))
-	e.Use(minBodySizeMiddleware(50))
+	e.Use(customMiddleware.MinBodySizeMiddleware(50))
 
 	e.POST("/send", postHandler)
 }
 
 func postHandler(c echo.Context) error {
-	message := &models.SendRequest{}
-	if err := c.Bind(message); err != nil {
+	requestBody, err := ioutil.ReadAll(c.Request().Body)
+	if err != nil {
+		fmt.Println("Error reading request body:", err)
 		return err
 	}
-	socket.Client([]byte(message.Message))
-	return c.JSON(http.StatusOK, message)
-}
 
-type limitedReaderCloser struct {
-	io.Reader
-}
+	requestBodyString := string(requestBody)
 
-func (l *limitedReaderCloser) Close() error {
-	if closer, ok := l.Reader.(io.Closer); ok {
-		return closer.Close()
+	request := &models.SendRequest{
+		Message: requestBodyString,
 	}
-	return nil
-}
 
-func minBodySizeMiddleware(minSize int64) echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			body := c.Request().Body
-			buf := make([]byte, minSize)
-			n, err := io.ReadFull(body, buf)
-			if err != nil {
-				return c.String(http.StatusBadRequest, "Request body is too small")
-			}
+	fmt.Println("Receive: " + request.Message)
 
-			limitedBody := &limitedReaderCloser{
-				Reader: io.MultiReader(io.NopCloser(strings.NewReader(string(buf[:n]))), body),
-			}
-
-			c.Request().Body = limitedBody
-			return next(c)
-		}
+	message := customCache.Message{
+		Message:  request.Message,
+		Received: false,
 	}
+	err = message.Create(context.Background(), customCache.Db, "messages", message)
+	if err != nil {
+		panic(err)
+	}
+
+	socket.Check()
+
+	return c.JSON(http.StatusOK, nil)
 }
