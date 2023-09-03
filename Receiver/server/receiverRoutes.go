@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -33,7 +34,7 @@ func postHandler(c echo.Context) error {
 		Message: requestBodyString,
 	}
 
-	fmt.Println("Receive: " + request.Message)
+	fmt.Printf("Receive: %d\n", len(request.Message))
 
 	message := customCache.Message{
 		Message:  request.Message,
@@ -41,7 +42,7 @@ func postHandler(c echo.Context) error {
 	}
 	err = message.Create(context.Background(), customCache.Db, "messages", message)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	socket.Check()

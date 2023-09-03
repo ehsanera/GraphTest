@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	client, err := customCache.Connect("mongodb://localhost:27017")
+	client, err := customCache.Connect("mongodb://root:Abc123@localhost:27017")
 	if err != nil {
 		panic(err)
 	}

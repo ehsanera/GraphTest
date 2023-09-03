@@ -11,7 +11,6 @@ import (
 func ServerConnect() {
 	listenAddr := "127.0.0.1:8081"
 
-	// Listen for incoming connections
 	listener, err := net.Listen("tcp", listenAddr)
 	if err != nil {
 		fmt.Println("Error listening:", err)
@@ -22,14 +21,12 @@ func ServerConnect() {
 	fmt.Println("Server listening on", listenAddr)
 
 	for {
-		// Accept incoming connection
 		conn, err := listener.Accept()
 		if err != nil {
 			fmt.Println("Error accepting connection:", err)
 			continue
 		}
 
-		// Handle connection in a separate goroutine
 		go handleConnection(conn)
 	}
 }
@@ -37,7 +34,7 @@ func ServerConnect() {
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
-	buffer := make([]byte, 1024)
+	buffer := make([]byte, 8192)
 	n, err := conn.Read(buffer)
 	if err != nil {
 		fmt.Println("Error reading:", err)
@@ -51,15 +48,10 @@ func handleConnection(conn net.Conn) {
 		Received: false,
 	}
 
-	err = message.Create(context.Background(), customCache.Db, "messages", &message)
+	err = message.Create(context.Background(), customCache.Db, "messages", message)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	log.Printf("Received %d bytes: %s\n", n, string(receivedData))
-
-	err = SendData(message.Message)
-	if err != nil {
-		return
-	}
+	log.Printf("Received %d\n", n)
 }

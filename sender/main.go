@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	numRequests := 1
+	numRequests := 100
 	url := "http://localhost:8080/send"
 
 	var wg sync.WaitGroup

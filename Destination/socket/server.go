@@ -35,22 +35,12 @@ func ServerConnect() {
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
-	initialData := "Hello, client! Welcome to the server."
-	_, err := conn.Write([]byte(initialData))
-	if err != nil {
-		log.Printf("Error sending initial data to %s: %v\n", conn.RemoteAddr(), err)
-		return
-	}
-
-	log.Printf("Sent initial data to %s: %s\n", conn.RemoteAddr(), initialData)
-
-	buffer := make([]byte, 1024)
+	buffer := make([]byte, 8192)
 	n, err := conn.Read(buffer)
 	if err != nil {
 		log.Printf("Error reading from %s: %v\n", conn.RemoteAddr(), err)
 		return
 	}
 
-	receivedData := buffer[:n]
-	log.Printf("Received %d bytes %s\n", n, string(receivedData))
+	log.Printf("Received %d\n", n)
 }

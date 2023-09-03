@@ -3,6 +3,8 @@ package customCache
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -10,10 +12,10 @@ import (
 
 var Db *mongo.Database
 
-func (m *Message) Update(ctx context.Context, db *mongo.Database, collectionName string, filter Message, update Message) error {
+func (m *Message) Update(ctx context.Context, db *mongo.Database, collectionName string, id primitive.ObjectID) error {
 	collection := db.Collection(collectionName)
 
-	_, err := collection.UpdateOne(ctx, filter, update)
+	_, err := collection.UpdateOne(ctx, bson.M{"_id": id}, bson.D{{"$set", bson.D{{"received", true}}}})
 	if err != nil {
 		return err
 	}
@@ -32,20 +34,27 @@ func (m *Message) Read(ctx context.Context, db *mongo.Database, collectionName s
 	return nil
 }
 
-func (m *Message) ReadAll(ctx context.Context, db *mongo.Database, collectionName string, result []Message) error {
+func (m *Message) ReadAll(ctx context.Context, db *mongo.Database, collectionName string) ([]Message, error) {
+	var result []Message
+
 	collection := db.Collection(collectionName)
 
-	cursor, err := collection.Find(ctx, nil)
+	cursor, err := collection.Find(ctx, bson.D{{}})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer cursor.Close(ctx)
 
-	if err := cursor.All(ctx, result); err != nil {
-		return err
+	for cursor.Next(context.TODO()) {
+		var elem Message
+		err := cursor.Decode(&elem)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, elem)
 	}
 
-	return nil
+	return result, nil
 }
 
 func (m *Message) Create(ctx context.Context, db *mongo.Database, collectionName string, model Message) error {
