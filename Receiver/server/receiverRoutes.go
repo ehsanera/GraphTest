@@ -1,24 +1,32 @@
 package server
 
 import (
-	"Receiver/customCache"
 	"Receiver/customMiddleware"
 	"Receiver/models"
-	"Receiver/socket"
-	"context"
+	"bufio"
+	"encoding/json"
 	"fmt"
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/limiter"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
+	"time"
 )
 
 func receiverRoutes(e *echo.Echo) {
 	e.Use(middleware.BodyLimit("8K"))
 	e.Use(customMiddleware.MinBodySizeMiddleware(50))
 
-	e.POST("/send", postHandler)
+	newLimiter := tollbooth.NewLimiter(10000, &limiter.ExpirableOptions{
+		DefaultExpirationTTL: time.Second,
+	})
+	newLimiter.SetMessage("Too Many Requests")
+
+	e.POST("/send", postHandler, customMiddleware.RateLimitMiddleware(newLimiter))
 }
 
 func postHandler(c echo.Context) error {
@@ -36,16 +44,40 @@ func postHandler(c echo.Context) error {
 
 	fmt.Printf("Receive: %d\n", len(request.Message))
 
-	message := customCache.Message{
+	message := models.Message{
 		Message:  request.Message,
 		Received: false,
 	}
-	err = message.Create(context.Background(), customCache.Db, "messages", message)
+
+	jsonData, err := json.Marshal(message)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	socket.Check()
+	err = sendDataToSocket(jsonData)
+
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 
 	return c.JSON(http.StatusOK, nil)
+}
+
+func sendDataToSocket(data []byte) error {
+	socketServerAddr := "localhost:8081"
+
+	conn, err := net.Dial("tcp", socketServerAddr)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	writer := bufio.NewWriter(conn)
+	_, err = writer.Write(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

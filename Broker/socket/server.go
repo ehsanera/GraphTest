@@ -3,55 +3,49 @@ package socket
 import (
 	"Broker/customCache"
 	"context"
+	"encoding/json"
 	"fmt"
-	"log"
 	"net"
+	"os"
 )
 
 func ServerConnect() {
 	listenAddr := "127.0.0.1:8081"
 
-	listener, err := net.Listen("tcp", listenAddr)
+	server, err := net.Listen("tcp", listenAddr)
 	if err != nil {
-		fmt.Println("Error listening:", err)
-		return
+		fmt.Println("Error listening:", err.Error())
+		os.Exit(1)
 	}
-	defer listener.Close()
-
-	fmt.Println("Server listening on", listenAddr)
-
+	defer server.Close()
+	fmt.Println("Listening on " + ServerHost + ":" + ServerPort + "...")
 	for {
-		conn, err := listener.Accept()
+		connection, err := server.Accept()
 		if err != nil {
-			fmt.Println("Error accepting connection:", err)
-			continue
+			fmt.Println("Error accepting: ", err.Error())
+			os.Exit(1)
 		}
-
-		go handleConnection(conn)
+		go processClient(connection)
 	}
 }
 
-func handleConnection(conn net.Conn) {
-	defer conn.Close()
-
-	buffer := make([]byte, 8192)
-	n, err := conn.Read(buffer)
+func processClient(connection net.Conn) {
+	buffer := make([]byte, 8096)
+	mLen, err := connection.Read(buffer)
 	if err != nil {
-		fmt.Println("Error reading:", err)
+		fmt.Println("Error reading:", err.Error())
+	}
+
+	message := customCache.Message{}
+	err = json.Unmarshal(buffer[:mLen], &message)
+	if err != nil {
 		return
 	}
-
-	receivedData := buffer[:n]
-
-	message := customCache.Message{
-		Message:  receivedData,
-		Received: false,
-	}
-
 	err = message.Create(context.Background(), customCache.Db, "messages", message)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
-
-	log.Printf("Received %d\n", n)
+	fmt.Println("Received: ", mLen)
+	connection.Close()
+	go Send()
 }

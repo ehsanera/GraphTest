@@ -6,6 +6,6 @@ import (
 
 type Message struct {
 	Sequence primitive.ObjectID `bson:"_id,omitempty"`
-	Message  []byte             `bson:"message"`
+	Message  string             `bson:"message"`
 	Received bool               `bson:"received"`
 }

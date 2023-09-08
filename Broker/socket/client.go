@@ -1,31 +1,34 @@
 package socket
 
 import (
+	"encoding/binary"
+	"errors"
 	"net"
 )
 
-var conn net.Conn
-
-func createConnection(serverAddr string) (net.Conn, error) {
-	// Connect to the server
-	conn, err := net.Dial("tcp", serverAddr)
-	if err != nil {
-		return nil, err
-	}
-	return conn, nil
-}
+const (
+	ServerHost = "localhost"
+	ServerPort = "8082"
+	ServerType = "tcp"
+)
 
 func SendData(data []byte) error {
-	if conn == nil {
-		// Connection not established or not active, attempt to create it
-		var err error
-		conn, err = createConnection("127.0.0.1:8082")
-		if err != nil {
-			return err
-		}
+	connection, err := net.Dial(ServerType, ServerHost+":"+ServerPort)
+	if err != nil {
+		return err
+	}
+	defer connection.Close()
+
+	_, err = connection.Write(data)
+	if err != nil {
+		return err
 	}
 
-	// Send the message bytes to the server
-	_, err := conn.Write(data)
-	return err
+	var size int64
+	err = binary.Read(connection, binary.LittleEndian, &size)
+	if err == nil {
+		return nil
+	}
+
+	return errors.New("oops")
 }
