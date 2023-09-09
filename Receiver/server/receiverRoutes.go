@@ -3,7 +3,6 @@ package server
 import (
 	"Receiver/customMiddleware"
 	"Receiver/models"
-	"bufio"
 	"encoding/json"
 	"fmt"
 	"github.com/didip/tollbooth"
@@ -73,8 +72,7 @@ func sendDataToSocket(data []byte) error {
 	}
 	defer conn.Close()
 
-	writer := bufio.NewWriter(conn)
-	_, err = writer.Write(data)
+	_, err = conn.Write(data)
 	if err != nil {
 		return err
 	}

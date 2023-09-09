@@ -30,7 +30,7 @@ func ServerConnect() {
 }
 
 func processClient(connection net.Conn) {
-	buffer := make([]byte, 8096)
+	buffer := make([]byte, 8196)
 	mLen, err := connection.Read(buffer)
 	if err != nil {
 		fmt.Println("Error reading:", err.Error())
@@ -41,6 +41,7 @@ func processClient(connection net.Conn) {
 	if err != nil {
 		return
 	}
+
 	err = message.Create(context.Background(), customCache.Db, "messages", message)
 	if err != nil {
 		return
