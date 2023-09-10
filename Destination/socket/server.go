@@ -32,15 +32,15 @@ func ServerConnect() {
 
 func handleConnection(conn net.Conn) {
 	buffer := make([]byte, 8192)
-	n, err := conn.Read(buffer)
+	mLen, err := conn.Read(buffer)
 	if err != nil {
 		log.Printf("Error reading from %s: %v\n", conn.RemoteAddr(), err)
 		return
 	}
 
-	log.Printf("Received %d\n", n)
+	log.Printf("Received %d\n", mLen)
 
-	err = binary.Write(conn, binary.LittleEndian, len(buffer))
+	err = binary.Write(conn, binary.LittleEndian, int64(mLen))
 	if err != nil {
 		log.Printf("Error writing to %s: %v\n", conn.RemoteAddr(), err)
 	}

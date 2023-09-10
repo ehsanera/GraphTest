@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	numRequests = 10
+	numRequests = 10000
 	url         = "http://localhost:8080/send"
 )
 

@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"os"
 )
@@ -18,7 +19,7 @@ func ServerConnect() {
 		os.Exit(1)
 	}
 	defer server.Close()
-	fmt.Println("Listening on " + ServerHost + ":" + ServerPort + "...")
+	fmt.Println("Listening on 127.0.0.1:8081...")
 	for {
 		connection, err := server.Accept()
 		if err != nil {
@@ -46,7 +47,8 @@ func processClient(connection net.Conn) {
 	if err != nil {
 		return
 	}
-	fmt.Println("Received: ", mLen)
+	log.Println("Received: ", mLen)
+	log.Println("Message: ", message)
 	connection.Close()
 	go Send()
 }

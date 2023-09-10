@@ -4,7 +4,6 @@ import (
 	"Broker/customCache"
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"sync/atomic"
 )
@@ -46,6 +45,4 @@ func Send() {
 			log.Printf("Error updating received status: %v", err)
 		}
 	}
-
-	fmt.Println("Processing completed")
 }

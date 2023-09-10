@@ -6,14 +6,8 @@ import (
 	"net"
 )
 
-const (
-	ServerHost = "localhost"
-	ServerPort = "8082"
-	ServerType = "tcp"
-)
-
 func SendData(data []byte) error {
-	connection, err := net.Dial(ServerType, ServerHost+":"+ServerPort)
+	connection, err := net.Dial("tcp", "127.0.0.1:8082")
 	if err != nil {
 		return err
 	}
@@ -26,9 +20,13 @@ func SendData(data []byte) error {
 
 	var size int64
 	err = binary.Read(connection, binary.LittleEndian, &size)
-	if err == nil {
-		return nil
+	if err != nil {
+		return err
 	}
 
-	return errors.New("oops")
+	if size == int64(len(data)) {
+		return nil
+	} else {
+		return errors.New("oops")
+	}
 }
