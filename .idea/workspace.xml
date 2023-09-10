@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c508ea58-9731-43c4-9671-10b1b525f6e6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Broker/socket/sender.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Receiver/customMiddleware/rateLimitMiddleware.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Broker/customCache/goCache.go" beforeDir="false" afterPath="$PROJECT_DIR$/Broker/customCache/goCache.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Broker/customCache/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/Broker/customCache/message.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Broker/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Broker/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Broker/socket/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/Broker/socket/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Broker/socket/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/Broker/socket/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Destination/socket/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/Destination/socket/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/customCache/goCache.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/customCache/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/models/message.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/server/receiverRoutes.go" beforeDir="false" afterPath="$PROJECT_DIR$/Receiver/server/receiverRoutes.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/socket/sender.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiver/socket/socketClient.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sender/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/sender/main.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../Program Files/Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2UwFyaUYP12boAUbCrczD5OsPX7" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/repo/Mine/GraphTest&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;go.vgo&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>
